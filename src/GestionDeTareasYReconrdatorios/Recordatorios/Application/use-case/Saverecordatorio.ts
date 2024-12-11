@@ -2,18 +2,15 @@ import { IRecordatorioRepository } from '../../Dominio/repository/IRecordatorioR
 import {Recordatorio} from '../../Dominio/models/recordatorio';
 
 export class SaveRecordatorio {
-    private recordatorioRepository: IRecordatorioRepository;
+  private recordatorioRepository: IRecordatorioRepository;
 
-    constructor(recordatorioRepository: IRecordatorioRepository) {
-        this.recordatorioRepository = recordatorioRepository;
-    }
+  constructor(recordatorioRepository: IRecordatorioRepository) {
+    this.recordatorioRepository = recordatorioRepository;
+  }
 
-    async saveRecordatorio(
-        tareaId: string,
-        fechaRecordatorio: Date,
-        enviado: boolean = false
-    ): Promise<void> {
-        const recordatorio = new Recordatorio(tareaId, fechaRecordatorio, enviado);
-        await this.recordatorioRepository.save(recordatorio);
-    }
+  async saveRecordatorio(tareaId: string, fechaRecordatorio: Date, enviado: boolean = false): Promise<{ email: string, titulo: string }> {
+    const recordatorio = new Recordatorio(tareaId, fechaRecordatorio, enviado);
+    await this.recordatorioRepository.save(recordatorio);
+    return this.recordatorioRepository.getTareaAndUsuario(tareaId);
+  }
 }

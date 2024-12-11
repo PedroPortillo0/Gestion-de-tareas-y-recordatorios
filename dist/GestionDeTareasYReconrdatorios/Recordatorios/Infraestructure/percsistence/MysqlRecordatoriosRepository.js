@@ -41,5 +41,32 @@ class MySQLRecordatorioRepository {
             }
         });
     }
+    getTareaAndUsuario(tareaId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const connection = yield (0, mysql_config_1.default)();
+            const query = `
+      SELECT u.email, t.titulo
+      FROM tareas t
+      JOIN usuarios u ON t.usuario_id = u.id
+      WHERE t.id = ?
+    `;
+            try {
+                const [rows] = yield connection.execute(query, [tareaId]);
+                if (rows.length > 0) {
+                    return rows[0];
+                }
+                else {
+                    throw new Error('Tarea no encontrada');
+                }
+            }
+            catch (error) {
+                console.error('Error al obtener la tarea y el usuario:', error);
+                throw error;
+            }
+            finally {
+                yield connection.end();
+            }
+        });
+    }
 }
 exports.MySQLRecordatorioRepository = MySQLRecordatorioRepository;

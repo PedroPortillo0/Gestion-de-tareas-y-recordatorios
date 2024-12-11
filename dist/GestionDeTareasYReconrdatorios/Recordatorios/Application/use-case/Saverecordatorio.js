@@ -19,6 +19,7 @@ class SaveRecordatorio {
         return __awaiter(this, arguments, void 0, function* (tareaId, fechaRecordatorio, enviado = false) {
             const recordatorio = new recordatorio_1.Recordatorio(tareaId, fechaRecordatorio, enviado);
             yield this.recordatorioRepository.save(recordatorio);
+            return this.recordatorioRepository.getTareaAndUsuario(tareaId);
         });
     }
 }

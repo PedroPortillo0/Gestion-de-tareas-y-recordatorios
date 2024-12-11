@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRecordatorioController = void 0;
+const Email_Service_1 = require("../Service/Email.Service");
 class CreateRecordatorioController {
     constructor(saveRecordatorio) {
         this.saveRecordatorio = saveRecordatorio;
@@ -21,8 +22,9 @@ class CreateRecordatorioController {
                 return res.status(400).json({ message: 'Tarea ID y fecha de recordatorio son requeridos' });
             }
             try {
-                yield this.saveRecordatorio.saveRecordatorio(tareaId, new Date(fechaRecordatorio), enviado);
-                return res.status(201).json({ message: 'Recordatorio creado exitosamente' });
+                const { email, titulo } = yield this.saveRecordatorio.saveRecordatorio(tareaId, new Date(fechaRecordatorio), enviado);
+                yield (0, Email_Service_1.sendRecordatorioEmail)(email, 'Nuevo Recordatorio', `Tienes un nuevo recordatorio para la tarea "${titulo}" en la fecha: ${fechaRecordatorio}`);
+                return res.status(201).json({ message: 'Recordatorio creado y correo enviado exitosamente' });
             }
             catch (error) {
                 return res.status(500).json({ message: 'Error al crear el recordatorio', error });
